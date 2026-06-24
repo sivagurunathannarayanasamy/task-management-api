@@ -28,6 +28,11 @@ public class TaskController {
     return taskRepository.findAll();
   }
 
+  @GetMapping("/count")
+  public Long getTaskCount() {
+    return taskRepository.count();
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
     return taskRepository.findById(id)
