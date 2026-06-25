@@ -31,6 +31,25 @@ public class TaskService {
     return taskRepository.count();
   }
 
+  public Task updateTask(Long id, Task updatedTask) {
+    Task existing = taskRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Task nor found with id: " + id));
+
+    existing.setTitle(updatedTask.getTitle());
+    existing.setDescription(updatedTask.getDescription());
+    existing.setStatus(updatedTask.getStatus());
+
+    return taskRepository.save(existing);
+  }
+
+  public void deleteTask(Long id) {
+    if (!taskRepository.existsById(id)) {
+      throw new IllegalArgumentException("Task not found with id: " + id);
+    }
+
+    taskRepository.deleteById(id);
+  }
+
 }
 
 
