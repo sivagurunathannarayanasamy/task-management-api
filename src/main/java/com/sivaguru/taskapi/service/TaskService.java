@@ -1,5 +1,6 @@
 package com.sivaguru.taskapi.service;
 
+import com.sivaguru.taskapi.exceptions.TaskNotFoundException;
 import com.sivaguru.taskapi.model.Task;
 import com.sivaguru.taskapi.repository.TaskRepository;
 import java.util.List;
@@ -33,7 +34,7 @@ public class TaskService {
 
   public Task updateTask(Long id, Task updatedTask) {
     Task existing = taskRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Task nor found with id: " + id));
+        .orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + id));
 
     existing.setTitle(updatedTask.getTitle());
     existing.setDescription(updatedTask.getDescription());
@@ -44,7 +45,7 @@ public class TaskService {
 
   public void deleteTask(Long id) {
     if (!taskRepository.existsById(id)) {
-      throw new IllegalArgumentException("Task not found with id: " + id);
+      throw new TaskNotFoundException("Task not found with id: " + id);
     }
 
     taskRepository.deleteById(id);
