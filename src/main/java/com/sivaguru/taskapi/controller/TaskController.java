@@ -1,5 +1,6 @@
 package com.sivaguru.taskapi.controller;
 
+import com.sivaguru.taskapi.generics.ApiResponse;
 import com.sivaguru.taskapi.model.Task;
 import com.sivaguru.taskapi.repository.TaskRepository;
 import com.sivaguru.taskapi.service.TaskService;
@@ -27,8 +28,10 @@ public class TaskController {
 
 
   @GetMapping
-  public List<Task> getAllTasks() {
-    return taskService.getAllTasks();
+  public ResponseEntity<ApiResponse<List<Task>>> getAllTasks() {
+    List<Task> tasks = taskService.getAllTasks();
+    ApiResponse<List<Task>> response = new ApiResponse<>(200, "Tasks fetched successfuly", tasks);
+    return ResponseEntity.ok(response);
   }
 
 
