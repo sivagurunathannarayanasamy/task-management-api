@@ -1,8 +1,12 @@
 package com.sivaguru.taskapi.service;
 
+import com.sivaguru.taskapi.dto.TaskRequestDTO;
+import com.sivaguru.taskapi.dto.TaskResponseDTO;
 import com.sivaguru.taskapi.exceptions.TaskNotFoundException;
+import com.sivaguru.taskapi.mapper.TaskMapper;
 import com.sivaguru.taskapi.model.Task;
 import com.sivaguru.taskapi.repository.TaskRepository;
+import com.sivaguru.taskapi.utils.RepositoryUtils;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -11,22 +15,31 @@ import org.springframework.stereotype.Service;
 public class TaskService {
 
   private final TaskRepository taskRepository;
+  private final TaskMapper taskMapper;
 
-  public TaskService(TaskRepository taskRepository) {
+  public TaskService(TaskRepository taskRepository, TaskMapper taskMapper) {
     this.taskRepository = taskRepository;
+    this.taskMapper = taskMapper;
   }
 
-  public List<Task> getAllTasks() {
-    return taskRepository.findAll();
+  public List<TaskResponseDTO> getAllTasks() {
+    return taskRepository.findAll()
+        .stream()
+        .map(taskMapper::toResponseDTO)
+        .toList();
   }
 
-  public Optional<Task> getTaskById(Long id) {
-    return taskRepository.findById(id);
-  }
 
-  public Task createTask(Task task) {
-    return taskRepository.save(task);
-  }
+ public TaskResponseDTO getTaskById(Long id) {
+   Task task = RepositoryUtils.findByIdOrThrow(taskRepository, id, "Task");
+    return taskMapper.toResponseDTO(task);
+ }
+
+ public TaskResponseDTO createTask(TaskRequestDTO dto) {
+    Task task = taskMapper.toEntity(dto);
+    Task saved = taskRepository.save(task);
+    return taskMapper.toResponseDTO(saved);
+ }
 
   public long getTaskCount() {
     return taskRepository.count();

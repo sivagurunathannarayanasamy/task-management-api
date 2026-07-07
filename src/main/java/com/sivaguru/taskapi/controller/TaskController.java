@@ -1,5 +1,7 @@
 package com.sivaguru.taskapi.controller;
 
+import com.sivaguru.taskapi.dto.TaskRequestDTO;
+import com.sivaguru.taskapi.dto.TaskResponseDTO;
 import com.sivaguru.taskapi.generics.ApiResponse;
 import com.sivaguru.taskapi.model.Task;
 import com.sivaguru.taskapi.repository.TaskRepository;
@@ -28,24 +30,20 @@ public class TaskController {
 
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<Task>>> getAllTasks() {
-    List<Task> tasks = taskService.getAllTasks();
-    ApiResponse<List<Task>> response = new ApiResponse<>(200, "Tasks fetched successfuly", tasks);
-    return ResponseEntity.ok(response);
+  public ApiResponse<List<TaskResponseDTO>> getAllTasks() {
+    List<TaskResponseDTO> tasks = taskService.getAllTasks();
+    return new ApiResponse<>(200, "Tasks fetched successfully", tasks);
   }
 
 
   @GetMapping("/{id}")
-  public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-    return taskService.getTaskById(id)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+  public TaskResponseDTO getTaskById(@PathVariable Long id) {
+    return taskService.getTaskById(id);
   }
 
   @PostMapping
-  public ResponseEntity<Task> createTask(@RequestBody Task task) {
-    Task saved = taskService.createTask(task);
-    return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+  public TaskResponseDTO createTask(@RequestBody TaskRequestDTO dto) {
+    return taskService.createTask(dto);
   }
 
   @GetMapping("/count")
