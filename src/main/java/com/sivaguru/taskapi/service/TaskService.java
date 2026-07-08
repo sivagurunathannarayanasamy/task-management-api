@@ -41,24 +41,41 @@ public class TaskService {
     return taskMapper.toResponseDTO(saved);
  }
 
+
+
   public long getTaskCount() {
     return taskRepository.count();
   }
 
-  public Task updateTask(Long id, Task updatedTask) {
+//  public Task updateTask(Long id, Task updatedTask) {
+//    Task existing = taskRepository.findById(id)
+//        .orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + id));
+//
+//    existing.setTitle(updatedTask.getTitle());
+//    existing.setDescription(updatedTask.getDescription());
+//    existing.setStatus(updatedTask.getStatus());
+//
+//    return taskRepository.save(existing);
+//  }
+
+  public TaskResponseDTO updateTask(Long id, TaskRequestDTO dto) {
     Task existing = taskRepository.findById(id)
         .orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + id));
 
-    existing.setTitle(updatedTask.getTitle());
-    existing.setDescription(updatedTask.getDescription());
-    existing.setStatus(updatedTask.getStatus());
+    existing.setTitle(dto.title());
+    existing.setDescription(dto.description());
+    existing.setStatus(dto.status());
 
-    return taskRepository.save(existing);
+    Task saved = taskRepository.save(existing);
+    return taskMapper.toResponseDTO(saved);
+
   }
 
   public void deleteTask(Long id) {
     if (!taskRepository.existsById(id)) {
       throw new TaskNotFoundException("Task not found with id: " + id);
+
+
     }
 
     taskRepository.deleteById(id);
