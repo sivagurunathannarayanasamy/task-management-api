@@ -6,6 +6,8 @@ import java.util.List;
 
 public class Day3 {
 
+  record Task(String title, String status, int priority) {}
+
   public static void main(String[] args) {
 
     List<Product> products = List.of(
@@ -32,6 +34,16 @@ public class Day3 {
     List<String> statuses = List.of("PENDING", "DONE", "PENDING", "IN_PROGRESS", "PENDING");
     System.out.println(TaskMapper.countStatuses(statuses));
     System.out.println(TaskMapper.countStatusesStream(statuses));
+
+    List<Task> tasks = List.of(
+        new Task("Fix login bug", "PENDING", 3),
+        new Task("Write README", "DONE", 1),
+        new Task("Deploy to prod", "PENDING", 5),
+        new Task("Update deps", "IN_PROGRESS", 2),
+        new Task("Refactor mapper", "PENDING", 4)
+    );
+
+    System.out.println(ProductMapper.tasksByStatus(tasks));
   }
 
 }

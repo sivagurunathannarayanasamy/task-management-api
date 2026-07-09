@@ -55,15 +55,7 @@ public class TaskMapper {
         ));
   }
 
-  public static Map<String, List<String>> tasksByStatus(List<Task> tasks) {
-    return tasks.stream()
-        .filter(taskPriority -> tasks.priority >=2)
-        .sorted(Comparator.comparing(Task::title))
-        .collect(Collectors.groupingBy(
-            taskPriority::title)
-            Collectors.mapping(title)
-        ))
-  }
+
 
 
 
