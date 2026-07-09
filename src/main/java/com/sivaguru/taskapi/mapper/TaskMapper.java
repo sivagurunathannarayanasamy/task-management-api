@@ -1,8 +1,17 @@
 package com.sivaguru.taskapi.mapper;
 
+import com.sivaguru.taskapi.codingproblem.interview.Product;
+import com.sivaguru.taskapi.codingproblem.interview.ProductDTO;
 import com.sivaguru.taskapi.dto.TaskRequestDTO;
 import com.sivaguru.taskapi.dto.TaskResponseDTO;
 import com.sivaguru.taskapi.model.Task;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.hibernate.event.internal.DefaultPersistOnFlushEventListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,5 +33,40 @@ public class TaskMapper {
     task.setStatus(dto.status());
     return task;
   }
+
+  public static Map<String, Integer> countStatuses(List<String> statuses) {
+    Map<String, Integer> counts = new HashMap<>();
+
+    for (String status : statuses) {
+      int current = counts.getOrDefault(status, 0);
+
+      counts.put(status, current+1);
+
+
+    }
+    return counts;
+  }
+
+  public static Map<String, Long> countStatusesStream(List<String> statuses) {
+    return statuses.stream()
+        .collect(Collectors.groupingBy(
+            s -> s,
+            Collectors.counting()
+        ));
+  }
+
+  public static Map<String, List<String>> tasksByStatus(List<Task> tasks) {
+    return tasks.stream()
+        .filter(taskPriority -> tasks.priority >=2)
+        .sorted(Comparator.comparing(Task::title))
+        .collect(Collectors.groupingBy(
+            taskPriority::title)
+            Collectors.mapping(title)
+        ))
+  }
+
+
+
+
 
 }

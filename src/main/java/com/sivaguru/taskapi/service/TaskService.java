@@ -74,13 +74,9 @@ public class TaskService {
   public void deleteTask(Long id) {
     if (!taskRepository.existsById(id)) {
       throw new TaskNotFoundException("Task not found with id: " + id);
-
-
     }
-
     taskRepository.deleteById(id);
   }
-
 }
 
 
