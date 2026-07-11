@@ -6,10 +6,15 @@ import com.sivaguru.taskapi.generics.ApiResponse;
 import com.sivaguru.taskapi.model.Task;
 import com.sivaguru.taskapi.repository.TaskRepository;
 import com.sivaguru.taskapi.service.TaskService;
+import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +47,7 @@ public class TaskController {
   }
 
   @PostMapping
-  public TaskResponseDTO createTask(@RequestBody TaskRequestDTO dto) {
+  public TaskResponseDTO createTask(@Valid @RequestBody TaskRequestDTO dto) {
     return taskService.createTask(dto);
   }
 
@@ -52,7 +57,7 @@ public class TaskController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @RequestBody TaskRequestDTO dto) {
+  public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDTO dto) {
     TaskResponseDTO updated = taskService.updateTask(id, dto);
     return ResponseEntity.ok(updated);
   }
@@ -61,6 +66,15 @@ public class TaskController {
   public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
     taskService.deleteTask(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
+    Map<String, String> errors = new HashMap<>();
+
+    ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+
+    return ResponseEntity.badRequest().body(errors);
   }
 
 
