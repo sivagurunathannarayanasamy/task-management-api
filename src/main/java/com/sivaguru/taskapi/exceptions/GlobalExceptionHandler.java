@@ -1,6 +1,7 @@
 package com.sivaguru.taskapi.exceptions;
 
 import com.sivaguru.taskapi.generics.ApiResponse;
+import jakarta.validation.constraints.Null;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,12 @@ public class GlobalExceptionHandler {
     ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(400, "Validation failed", errors));
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
+    String message = ex.getMessage();
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(400, message, null));
   }
 
 }

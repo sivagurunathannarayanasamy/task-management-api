@@ -21,6 +21,12 @@ public class TaskStreamPractice {
         .findFirst();
   }
 
+  public long getTaskLongerThanTen(List<Task> tasks) {
+    return tasks.stream()
+        .filter(task -> task.getTitle().length() > 10)
+        .count();
+  }
+
 //public List<Task> fetchTaskByIds(List<Long> taskIds) {
 //    return taskIds.stream()
 //        .map(id -> taskService.getTaskById(id))
