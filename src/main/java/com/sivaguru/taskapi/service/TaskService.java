@@ -12,7 +12,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TaskService {
+public class  TaskService {
 
   private final TaskRepository taskRepository;
   private final TaskMapper taskMapper;

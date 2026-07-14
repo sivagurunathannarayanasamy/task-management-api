@@ -36,6 +36,7 @@ public class TaskController {
 
   @GetMapping
   public ApiResponse<List<TaskResponseDTO>> getAllTasks() {
+
     List<TaskResponseDTO> tasks = taskService.getAllTasks();
     return new ApiResponse<>(200, "Tasks fetched successfully", tasks);
   }
@@ -67,7 +68,5 @@ public class TaskController {
     taskService.deleteTask(id);
     return ResponseEntity.noContent().build();
   }
-
-
 
 }
