@@ -29,6 +29,13 @@ public class  TaskService {
         .toList();
   }
 
+  public List<TaskResponseDTO> getTasksByStatus(String status) {
+    return taskRepository.findByStatus(status)
+        .stream()
+        .map(taskMapper::toResponseDTO)
+        .toList();
+  }
+
 
  public TaskResponseDTO getTaskById(Long id) {
    Task task = RepositoryUtils.findByIdOrThrow(taskRepository, id, "Task");
@@ -77,6 +84,8 @@ public class  TaskService {
     }
     taskRepository.deleteById(id);
   }
+
+
 }
 
 

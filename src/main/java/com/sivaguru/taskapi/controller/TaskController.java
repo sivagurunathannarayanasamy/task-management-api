@@ -41,32 +41,46 @@ public class TaskController {
     return new ApiResponse<>(200, "Tasks fetched successfully", tasks);
   }
 
+  @GetMapping("/status/{status}")
+  public ApiResponse<List<TaskResponseDTO>> getTasksByStatus(@PathVariable("status") String status) {
+
+    List<TaskResponseDTO> tasks = taskService.getTasksByStatus(status);
+
+    return new ApiResponse<>(200, "Tasks fetched successfully", tasks);
+  }
+
+
 
   @GetMapping("/{id}")
-  public TaskResponseDTO getTaskById(@PathVariable Long id) {
-    return taskService.getTaskById(id);
+  public ApiResponse<TaskResponseDTO> getTaskById(@PathVariable Long id) {
+
+    TaskResponseDTO task = taskService.getTaskById(id);
+    return new ApiResponse<>(200, "Task fetched successfully", task);
   }
 
   @PostMapping
-  public TaskResponseDTO createTask(@Valid @RequestBody TaskRequestDTO dto) {
-    return taskService.createTask(dto);
+  public ApiResponse<TaskResponseDTO> createTask(@Valid @RequestBody TaskRequestDTO dto) {
+    TaskResponseDTO task = taskService.createTask(dto);
+    return new ApiResponse<>(201, "Task created Successfully", task);
   }
 
   @GetMapping("/count")
-  public Long getTaskCount() {
-    return taskService.getTaskCount();
+  public ApiResponse<Long> getTaskCount() {
+    Long count = taskService.getTaskCount();
+    return new ApiResponse<>(200, "Task count fetched successfully", count);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDTO dto) {
+  public ResponseEntity<ApiResponse<TaskResponseDTO>> updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDTO dto) {
     TaskResponseDTO updated = taskService.updateTask(id, dto);
-    return ResponseEntity.ok(updated);
+    return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(200, "Task updated successfully", updated));
+
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> deleteTask(@PathVariable Long id) {
     taskService.deleteTask(id);
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(200, "Task deleted successfully", null));
   }
 
 }
