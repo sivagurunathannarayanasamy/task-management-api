@@ -2,9 +2,9 @@ package com.sivaguru.taskapi.codingproblem.interview;
 
 public class ApiResponse<T> {
 
-  int statusCode;
-  String statusMessage;
-  T data;
+  private int statusCode;
+  private String statusMessage;
+  private T data;
 
   public ApiResponse(int statusCode, String statusMessage, T data) {
     this.statusCode = statusCode;

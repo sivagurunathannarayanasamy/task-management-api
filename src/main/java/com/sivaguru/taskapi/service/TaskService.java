@@ -1,5 +1,7 @@
 package com.sivaguru.taskapi.service;
 
+import com.sivaguru.taskapi.dto.PageMetadata;
+import com.sivaguru.taskapi.dto.PagedResponse;
 import com.sivaguru.taskapi.dto.TaskRequestDTO;
 import com.sivaguru.taskapi.dto.TaskResponseDTO;
 import com.sivaguru.taskapi.exceptions.TaskNotFoundException;
@@ -9,6 +11,8 @@ import com.sivaguru.taskapi.repository.TaskRepository;
 import com.sivaguru.taskapi.utils.RepositoryUtils;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -85,6 +89,24 @@ public class  TaskService {
     taskRepository.deleteById(id);
   }
 
+  public PagedResponse<List<TaskResponseDTO>> getTasksByPage(Pageable pageable) {
+    Page<Task> taskPage = taskRepository.findAll(pageable);
+
+    List<TaskResponseDTO> dtos = taskPage.getContent()
+        .stream()
+        .map(taskMapper::toResponseDTO)
+        .toList();
+
+    PageMetadata pageMetadata = new PageMetadata(
+        taskPage.getNumber(),
+        taskPage.getSize(),
+        taskPage.getTotalElements(),
+        taskPage.getTotalPages()
+
+    );
+
+    return new PagedResponse<>(200, "Tasks in page retrieved successfully", dtos, pageMetadata);
+  }
 
 }
 

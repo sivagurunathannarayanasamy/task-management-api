@@ -1,5 +1,6 @@
 package com.sivaguru.taskapi.controller;
 
+import com.sivaguru.taskapi.dto.PagedResponse;
 import com.sivaguru.taskapi.dto.TaskRequestDTO;
 import com.sivaguru.taskapi.dto.TaskResponseDTO;
 import com.sivaguru.taskapi.generics.ApiResponse;
@@ -10,6 +11,8 @@ import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,12 +37,12 @@ public class TaskController {
   }
 
 
-  @GetMapping
-  public ApiResponse<List<TaskResponseDTO>> getAllTasks() {
-
-    List<TaskResponseDTO> tasks = taskService.getAllTasks();
-    return new ApiResponse<>(200, "Tasks fetched successfully", tasks);
-  }
+//  @GetMapping
+//  public ApiResponse<List<TaskResponseDTO>> getAllTasks() {
+//
+//    List<TaskResponseDTO> tasks = taskService.getAllTasks();
+//    return new ApiResponse<>(200, "Tasks fetched successfully", tasks);
+//  }
 
   @GetMapping("/status/{status}")
   public ApiResponse<List<TaskResponseDTO>> getTasksByStatus(@PathVariable("status") String status) {
@@ -48,7 +51,6 @@ public class TaskController {
 
     return new ApiResponse<>(200, "Tasks fetched successfully", tasks);
   }
-
 
 
   @GetMapping("/{id}")
@@ -81,6 +83,12 @@ public class TaskController {
   public ResponseEntity<ApiResponse<Void>> deleteTask(@PathVariable Long id) {
     taskService.deleteTask(id);
     return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(200, "Task deleted successfully", null));
+  }
+
+  @GetMapping
+  public PagedResponse<List<TaskResponseDTO>> getTasksByPage(@PageableDefault(size = 10, sort = "title") Pageable pageable){
+    PagedResponse<List<TaskResponseDTO>> tasksPage = taskService.getTasksByPage(pageable);
+    return tasksPage;
   }
 
 }
