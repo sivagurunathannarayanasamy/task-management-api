@@ -42,7 +42,6 @@ public class Day3 {
         new Task("Update deps", "IN_PROGRESS", 2),
         new Task("Refactor mapper", "PENDING", 4)
     );
-
     System.out.println(ProductMapper.tasksByStatus(tasks));
   }
 

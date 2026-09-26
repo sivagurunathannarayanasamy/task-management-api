@@ -54,8 +54,4 @@ public class ProductMapper {
             Collectors.mapping(Task::title, Collectors.toList())
         ));
   }
-
-
-
-
 }

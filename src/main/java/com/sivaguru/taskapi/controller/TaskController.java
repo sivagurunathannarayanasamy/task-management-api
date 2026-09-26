@@ -61,9 +61,10 @@ public class TaskController {
   }
 
   @PostMapping
-  public ApiResponse<TaskResponseDTO> createTask(@Valid @RequestBody TaskRequestDTO dto) {
+  public ResponseEntity<ApiResponse<TaskResponseDTO>> createTask(@Valid @RequestBody TaskRequestDTO dto) {
     TaskResponseDTO task = taskService.createTask(dto);
-    return new ApiResponse<>(201, "Task created Successfully", task);
+    ApiResponse<TaskResponseDTO> response = new ApiResponse<>(201, "Task created Successfully", task);
+    return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
 
   @GetMapping("/count")
